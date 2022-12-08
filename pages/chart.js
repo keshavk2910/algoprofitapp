@@ -193,7 +193,7 @@ export default function Home({ dataAPI }) {
   );
 }
 export async function getStaticProps() {
-  const res = await fetch('http://localhost:3000/api/sheet');
+  const res = await fetch('/api/sheet');
   const datafromapi = await res.json();
 
   return {
