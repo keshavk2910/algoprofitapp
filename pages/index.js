@@ -58,6 +58,17 @@ export default function Home({ dataAPI }) {
   const totalZerodha = apiData.reduce((a, b) => a + Number(b.Zerodha), 0);
   const totalFinvasia = apiData.reduce((a, b) => a + Number(b.Finvasia), 0);
   const totalTotal = apiData.reduce((a, b) => a + Number(b.Total), 0);
+
+  //const for total profit when Total is positive
+  const totalProfit = apiData
+    .filter((d) => Number(d.Total) > 0)
+    .reduce((a, b) => a + Number(b.Total), 0);
+
+  //const for total loss when Total is negative
+  const totalLoss = apiData
+    .filter((d) => Number(d.Total) < 0)
+    .reduce((a, b) => a + Number(b.Total), 0);
+
   const datasetsFromAPi = [
     {
       type: 'line',
@@ -177,6 +188,11 @@ export default function Home({ dataAPI }) {
               100}
           </div>
         </div>
+        <div className='flex flex-col justify-center items-center bg-yellow-200 p-2'>
+          <div className='text-center'>Profits Total</div>
+          <div className='text-center'>{totalProfit}</div>
+        </div>
+
         <div className='flex flex-col justify-center items-center bg-red-200 p-2 '>
           <div className='text-center'>Loss Days %</div>
           <div className='text-center'>
@@ -184,6 +200,10 @@ export default function Home({ dataAPI }) {
               apiData.length) *
               100}
           </div>
+        </div>
+        <div className='flex flex-col justify-center items-center bg-yellow-200 p-2'>
+          <div className='text-center'>Loss Total</div>
+          <div className='text-center'>{totalLoss}</div>
         </div>
       </div>
       <div className='mt-10'>
