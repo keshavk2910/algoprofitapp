@@ -1,15 +1,206 @@
-import RoboChart from '@postlight/react-google-sheet-to-chart';
+import { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  LineController,
+  BarController,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Chart } from 'react-chartjs-2';
+// import { Bar } from 'react-chartjs-2';
 
-export default function Home() {
-  return (
-    <RoboChart
-      id='1tPEFZVX168iYjgEAKlALnocLPsjqzIQsAaBMCbxgVFE'
-      sheet='Sheet1'
-      token='AIzaSyBy6ehq85wmNULwq7s_LwaBIhGlaJW4oGk'
-      title='Algorithmic Trading Results'
-      type='bar'
-      xsuffix='s'
-      colors={['#ff5722', '#990055', '#000']}
-    />
+export default function Home({ dataAPI }) {
+  const [chartData, setChartData] = useState({});
+  const [apiData, setApiData] = useState(dataAPI);
+
+  ChartJS.register(
+    LinearScale,
+    CategoryScale,
+    BarElement,
+    PointElement,
+    LineElement,
+    Legend,
+    Tooltip,
+    LineController,
+    BarController
   );
+
+  const options = {
+    plugins: {
+      title: {
+        display: false,
+        text: 'Algorithmic Trading Results',
+      },
+    },
+    responsive: true,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
+
+  const labelfromapi = apiData.map((d) => d.Date);
+
+  const totalZerodha = apiData.reduce((a, b) => a + Number(b.Zerodha), 0);
+  const totalFinvasia = apiData.reduce((a, b) => a + Number(b.Finvasia), 0);
+  const totalTotal = apiData.reduce((a, b) => a + Number(b.Total), 0);
+  const datasetsFromAPi = [
+    {
+      type: 'line',
+      label: 'Total Line',
+      borderColor: totalTotal > 0 ? 'green' : 'red',
+      borderWidth: 5,
+      fill: false,
+      data: labelfromapi.map(
+        (
+          d,
+          i //total till this index
+        ) => apiData.slice(0, i + 1).reduce((a, b) => a + Number(b.Total), 0)
+      ),
+    },
+
+    {
+      type: 'bar',
+      label: 'Zerodha',
+      data: labelfromapi.map((d, i) => apiData[i].Zerodha),
+      backgroundColor: '#ff5722',
+      stack: 'Stack 0',
+    },
+    {
+      label: 'Finvasia',
+      data: labelfromapi.map((d, i) => apiData[i].Finvasia),
+      backgroundColor: '#990055',
+      stack: 'Stack 0',
+    },
+    {
+      label: 'Total',
+      data: labelfromapi.map((d, i) => apiData[i].Total),
+      backgroundColor: '#000',
+      stack: 'Stack 0',
+    },
+  ];
+  console.log(datasetsFromAPi);
+  const data = {
+    labels: labelfromapi,
+    datasets: datasetsFromAPi,
+  };
+  return (
+    <div className='container m-auto'>
+      <h1 className='text-4xl font-bold mb-10 mt-10 text-center'>
+        Algorithmic Trading Results
+      </h1>
+      <div className='w-1/2 m-auto'>
+        <table className='table-auto w-full border-collapse border border-gray-400 m-auto'>
+          <thead>
+            <tr>
+              <th className='border border-gray-400'>Date</th>
+              <th className='border border-gray-400'>Zerodha</th>
+              <th className='border border-gray-400'>Finvasia</th>
+              <th className='border border-gray-400'>Total</th>
+              <th className='border border-gray-400'>Profit or Loss</th>
+            </tr>
+          </thead>
+          <tbody>
+            {apiData.map((d, i) => (
+              <tr
+                key={i}
+                className={i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-100'}
+              >
+                <td className='border border-gray-400'>{d.Date}</td>
+                <td className='border border-gray-400'>{d.Zerodha}</td>
+                <td className='border border-gray-400'>{d.Finvasia}</td>
+                <td className='border border-gray-400'>{d.Total}</td>
+                <td
+                  className={
+                    Number(d.Total) > 0
+                      ? 'border border-gray-400 bg-green-200'
+                      : 'border border-gray-400 bg-red-200'
+                  }
+                >
+                  {Number(d.Total) > 0 ? 'Profit' : 'Loss'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className='flex justify-between mt-10 border p-5'>
+        <div
+          className={
+            totalZerodha > 0
+              ? 'flex flex-col justify-center items-center p-2 bg-green-200'
+              : 'flex flex-col justify-center items-center p-2 bg-red-200'
+          }
+        >
+          <div className='text-center'>Total Zerodha</div>
+          <div className='text-center'>{totalZerodha}</div>
+        </div>
+        <div
+          className={
+            totalFinvasia > 0
+              ? 'flex flex-col justify-center items-center p-2 bg-green-200'
+              : 'flex flex-col justify-center items-center p-2 bg-red-200'
+          }
+        >
+          <div className='text-center'>Total Finvasia</div>
+          <div className='text-center'>{totalFinvasia}</div>
+        </div>
+        <div
+          className={
+            totalTotal > 0
+              ? 'flex flex-col justify-center items-center p-2 bg-green-200'
+              : 'flex flex-col justify-center items-center p-2 bg-red-200'
+          }
+        >
+          <div className='text-center'>Total</div>
+          <div className='text-center'>{totalTotal}</div>
+        </div>
+        <div className='flex flex-col justify-center items-center bg-green-200 p-2'>
+          <div className='text-center'>Profit Days %</div>
+          <div className='text-center'>
+            {(apiData.filter((d) => Number(d.Total) > 0).length /
+              apiData.length) *
+              100}
+          </div>
+        </div>
+        <div className='flex flex-col justify-center items-center bg-red-200 p-2 '>
+          <div className='text-center'>Loss Days %</div>
+          <div className='text-center'>
+            {(apiData.filter((d) => Number(d.Total) < 0).length /
+              apiData.length) *
+              100}
+          </div>
+        </div>
+      </div>
+      <div className='mt-10'>
+        <Chart type='bar' data={data} />
+      </div>
+    </div>
+  );
+}
+export async function getServerSideProps() {
+  const res = await fetch(
+    'https://algoprofitapp-7515ngpzt-keshavk2910.vercel.app/api/sheet'
+  );
+  const datafromapi = await res.json();
+
+  return {
+    props: {
+      dataAPI: datafromapi,
+    },
+  };
 }
