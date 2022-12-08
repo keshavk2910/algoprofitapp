@@ -192,8 +192,8 @@ export default function Home({ dataAPI }) {
     </div>
   );
 }
-export async function getStaticProps() {
-  const res = await fetch('/api/sheet');
+export async function getServerSideProps() {
+  const res = await fetch('http://localhost:3000/api/sheet');
   const datafromapi = await res.json();
 
   return {
