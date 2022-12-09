@@ -228,7 +228,7 @@ export default function Home({ dataAPI }) {
   );
 }
 export async function getServerSideProps() {
-  const res = await fetch('http://localhost:3000/api/sheetKeshav');
+  const res = await fetch('https://algoprofitapp.vercel.app/api/sheetKeshav');
   const datafromapi = await res.json();
 
   return {
