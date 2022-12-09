@@ -57,7 +57,7 @@ export default function Home({ dataAPI }) {
   const labelfromapi = apiData.map((d) => d.Date);
 
   const totalZerodha = apiData.reduce((a, b) => a + Number(b.Zerodha), 0);
-  const totalFinvasia = apiData.reduce((a, b) => a + Number(b.Finvasia), 0);
+  const totalTradeSmart = apiData.reduce((a, b) => a + Number(b.TradeSmart), 0);
   const totalTotal = apiData.reduce((a, b) => a + Number(b.Total), 0);
 
   //const for total profit when Total is positive
@@ -93,8 +93,8 @@ export default function Home({ dataAPI }) {
       stack: 'Stack 0',
     },
     {
-      label: 'Finvasia',
-      data: labelfromapi.map((d, i) => apiData[i].Finvasia),
+      label: 'TradeSmart',
+      data: labelfromapi.map((d, i) => apiData[i].TradeSmart),
       backgroundColor: '#990055',
       stack: 'Stack 0',
     },
@@ -135,7 +135,7 @@ export default function Home({ dataAPI }) {
             <tr>
               <th className='border border-gray-400'>Date</th>
               <th className='border border-gray-400'>Zerodha</th>
-              <th className='border border-gray-400'>Finvasia</th>
+              <th className='border border-gray-400'>TradeSmart</th>
               <th className='border border-gray-400'>Total</th>
               <th className='border border-gray-400'>Profit or Loss</th>
             </tr>
@@ -148,7 +148,7 @@ export default function Home({ dataAPI }) {
               >
                 <td className='border border-gray-400'>{d.Date}</td>
                 <td className='border border-gray-400'>{d.Zerodha}</td>
-                <td className='border border-gray-400'>{d.Finvasia}</td>
+                <td className='border border-gray-400'>{d.TradeSmart}</td>
                 <td className='border border-gray-400'>{d.Total}</td>
                 <td
                   className={
@@ -177,13 +177,13 @@ export default function Home({ dataAPI }) {
         </div>
         <div
           className={
-            totalFinvasia > 0
+            totalTradeSmart > 0
               ? 'flex flex-col justify-center items-center p-2 bg-green-200'
               : 'flex flex-col justify-center items-center p-2 bg-red-200'
           }
         >
-          <div className='text-center'>Total Finvasia</div>
-          <div className='text-center'>{totalFinvasia}</div>
+          <div className='text-center'>Total TradeSmart</div>
+          <div className='text-center'>{totalTradeSmart}</div>
         </div>
         <div
           className={
@@ -228,9 +228,7 @@ export default function Home({ dataAPI }) {
   );
 }
 export async function getServerSideProps() {
-  const res = await fetch(
-    'https://algoprofitapp-7515ngpzt-keshavk2910.vercel.app/api/sheet'
-  );
+  const res = await fetch('http://localhost:3000/api/sheetKeshav');
   const datafromapi = await res.json();
 
   return {

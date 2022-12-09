@@ -56,19 +56,17 @@ export default function Home({ dataAPI }) {
 
   const labelfromapi = apiData.map((d) => d.Date);
 
-  const totalZerodha = apiData.reduce((a, b) => a + Number(b.Zerodha), 0);
-  const totalFinvasia = apiData.reduce((a, b) => a + Number(b.Finvasia), 0);
-  const totalTotal = apiData.reduce((a, b) => a + Number(b.Total), 0);
+  const totalHDFC = apiData.reduce((a, b) => a + Number(b.HDFC), 0);
+  const totalTotal = apiData.reduce((a, b) => a + Number(b.HDFC), 0);
 
-  //const for total profit when Total is positive
   const totalProfit = apiData
-    .filter((d) => Number(d.Total) > 0)
-    .reduce((a, b) => a + Number(b.Total), 0);
+    .filter((d) => Number(d.HDFC) > 0)
+    .reduce((a, b) => a + Number(b.HDFC), 0);
 
   //const for total loss when Total is negative
   const totalLoss = apiData
-    .filter((d) => Number(d.Total) < 0)
-    .reduce((a, b) => a + Number(b.Total), 0);
+    .filter((d) => Number(d.HDFC) < 0)
+    .reduce((a, b) => a + Number(b.HDFC), 0);
 
   const datasetsFromAPi = [
     {
@@ -81,31 +79,18 @@ export default function Home({ dataAPI }) {
         (
           d,
           i //total till this index
-        ) => apiData.slice(0, i + 1).reduce((a, b) => a + Number(b.Total), 0)
+        ) => apiData.slice(0, i + 1).reduce((a, b) => a + Number(b.HDFC), 0)
       ),
     },
 
     {
       type: 'bar',
-      label: 'Zerodha',
-      data: labelfromapi.map((d, i) => apiData[i].Zerodha),
-      backgroundColor: '#ff5722',
-      stack: 'Stack 0',
-    },
-    {
-      label: 'Finvasia',
-      data: labelfromapi.map((d, i) => apiData[i].Finvasia),
-      backgroundColor: '#990055',
-      stack: 'Stack 0',
-    },
-    {
-      label: 'Total',
-      data: labelfromapi.map((d, i) => apiData[i].Total),
-      backgroundColor: '#000',
+      label: 'HDFC',
+      data: labelfromapi.map((d, i) => apiData[i].HDFC),
+      backgroundColor: '#004C8F',
       stack: 'Stack 0',
     },
   ];
-  console.log(datasetsFromAPi);
   const data = {
     labels: labelfromapi,
     datasets: datasetsFromAPi,
@@ -134,9 +119,7 @@ export default function Home({ dataAPI }) {
           <thead>
             <tr>
               <th className='border border-gray-400'>Date</th>
-              <th className='border border-gray-400'>Zerodha</th>
-              <th className='border border-gray-400'>Finvasia</th>
-              <th className='border border-gray-400'>Total</th>
+              <th className='border border-gray-400'>HDFC</th>
               <th className='border border-gray-400'>Profit or Loss</th>
             </tr>
           </thead>
@@ -147,17 +130,15 @@ export default function Home({ dataAPI }) {
                 className={i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-100'}
               >
                 <td className='border border-gray-400'>{d.Date}</td>
-                <td className='border border-gray-400'>{d.Zerodha}</td>
-                <td className='border border-gray-400'>{d.Finvasia}</td>
-                <td className='border border-gray-400'>{d.Total}</td>
+                <td className='border border-gray-400'>{d.HDFC}</td>
                 <td
                   className={
-                    Number(d.Total) > 0
+                    Number(d.HDFC) > 0
                       ? 'border border-gray-400 bg-green-200'
                       : 'border border-gray-400 bg-red-200'
                   }
                 >
-                  {Number(d.Total) > 0 ? 'Profit' : 'Loss'}
+                  {Number(d.HDFC) > 0 ? 'Profit' : 'Loss'}
                 </td>
               </tr>
             ))}
@@ -167,24 +148,15 @@ export default function Home({ dataAPI }) {
       <div className='flex justify-between mt-10 border p-5'>
         <div
           className={
-            totalZerodha > 0
+            totalHDFC > 0
               ? 'flex flex-col justify-center items-center p-2 bg-green-200'
               : 'flex flex-col justify-center items-center p-2 bg-red-200'
           }
         >
-          <div className='text-center'>Total Zerodha</div>
-          <div className='text-center'>{totalZerodha}</div>
+          <div className='text-center'>Total HDFC</div>
+          <div className='text-center'>{totalHDFC}</div>
         </div>
-        <div
-          className={
-            totalFinvasia > 0
-              ? 'flex flex-col justify-center items-center p-2 bg-green-200'
-              : 'flex flex-col justify-center items-center p-2 bg-red-200'
-          }
-        >
-          <div className='text-center'>Total Finvasia</div>
-          <div className='text-center'>{totalFinvasia}</div>
-        </div>
+
         <div
           className={
             totalTotal > 0
@@ -198,26 +170,26 @@ export default function Home({ dataAPI }) {
         <div className='flex flex-col justify-center items-center bg-green-200 p-2'>
           <div className='text-center'>Profit Days %</div>
           <div className='text-center'>
-            {(apiData.filter((d) => Number(d.Total) > 0).length /
+            {(apiData.filter((d) => Number(d.HDFC) > 0).length /
               apiData.length) *
               100}
           </div>
         </div>
         <div className='flex flex-col justify-center items-center bg-yellow-200 p-2'>
-          <div className='text-center'>Profits Total</div>
+          <div className='text-center'>Profits HDFC</div>
           <div className='text-center'>{totalProfit}</div>
         </div>
 
         <div className='flex flex-col justify-center items-center bg-red-200 p-2 '>
           <div className='text-center'>Loss Days %</div>
           <div className='text-center'>
-            {(apiData.filter((d) => Number(d.Total) < 0).length /
+            {(apiData.filter((d) => Number(d.HDFC) < 0).length /
               apiData.length) *
               100}
           </div>
         </div>
         <div className='flex flex-col justify-center items-center bg-yellow-200 p-2'>
-          <div className='text-center'>Loss Total</div>
+          <div className='text-center'>Loss HDFC</div>
           <div className='text-center'>{totalLoss}</div>
         </div>
       </div>
@@ -228,9 +200,7 @@ export default function Home({ dataAPI }) {
   );
 }
 export async function getServerSideProps() {
-  const res = await fetch(
-    'https://algoprofitapp-7515ngpzt-keshavk2910.vercel.app/api/sheet'
-  );
+  const res = await fetch('http://localhost:3000/api/sheetHema');
   const datafromapi = await res.json();
 
   return {
