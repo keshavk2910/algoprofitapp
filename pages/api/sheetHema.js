@@ -12,10 +12,11 @@ export default async function handler(req, res) {
 
   const sheet = doc.sheetsByIndex[0];
   const rows = await sheet.getRows();
+  console.log(rows);
   const send = rows.map((row) => ({
     Date: row.Date,
-    HDFC: row.HDFC,
+    MTM: row.MTM,
+    Brokerage: row.Brokerage,
   }));
-  console.log(sheet.title);
   res.status(200).json(send);
 }
