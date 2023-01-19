@@ -248,7 +248,7 @@ export default function Deepak({ dataAPI }) {
   );
 }
 export async function getServerSideProps() {
-  const res = await fetch('http://localhost:3000/api/sheetHema');
+  const res = await fetch('https://algoprofitapp.vercel.app/api/sheetHema');
   const datafromapi = await res.json();
 
   return {
